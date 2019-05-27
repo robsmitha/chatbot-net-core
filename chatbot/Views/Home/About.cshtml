@@ -1,0 +1,161 @@
+﻿@{
+    ViewData["Title"] = "About";
+}
+<h2>@ViewData["Title"]</h2>
+<h3>@ViewData["Message"]</h3>
+
+<p>
+    The Chatbot software is powered by a
+    <a target="_blank" href="https://www.luis.ai/home">language understanding api</a>
+    to handle human questions.
+</p>
+<strong>Chatbot Understands</strong>
+<ul>
+    <li>Greetings</li>
+    <li>Weather</li>
+    <li>Stocks</li>
+    <li>Gibberish (not really)</li>
+</ul>
+
+<strong>
+    Developers
+</strong>
+<br />
+<small class="text-black-50">
+    Setup
+</small>
+<br />
+<strong>Chatbot's brain</strong> -
+        Chatbot requires some free-ish apis to answer questions.
+<br />
+<small class="text-black-50">*NOTE: You must create your own accounts to get these endpoints and api keys.</small>
+<ul>
+    <li>
+        Language Understanding (LUIS) -
+        <small class="text-black-50">
+            LUIS enables you to integrate natural language understanding into your chatbot or other application without having to create the complex part of machine learning models. 
+            <a target="_blank" href="https://www.luis.ai/welcome">
+                <i class="fa fa-external-link-square-alt"></i>
+            </a>
+        </small>
+        <ul class="small text-black-50">
+            <li>
+                LUIS endpoint (ex. https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/)
+            </li>
+            <li>
+                LUIS App Key
+            </li>
+            <li>
+                LUIS Api Key
+            </li>
+            <li>
+                Create 3 starter intents
+                <ol>
+                    <li>Greeting</li>
+                    <li>CheckWeather</li>
+                    <li>CheckStock</li>
+                </ol>
+            </li>
+        </ul>
+    </li>
+    <li>
+        Google Geocode -
+        <small class="text-black-50">
+            The Geocoding API is a service that provides geocoding and reverse geocoding of addresses. 
+            <a target="_blank" href="https://developers.google.com/maps/documentation/geocoding/start">
+                <i class="fa fa-external-link-square-alt"></i>
+            </a>
+        </small>
+        <ul class="small text-black-50">
+            <li>
+                Google geocode endpoint (ex. https://maps.googleapis.com/maps/api/geocode/json?address=)
+            </li>
+            <li>
+                Google Api Key
+            </li>
+        </ul>
+    </li>
+    <li>
+        DarkSky -
+        <small class="text-black-50">
+            The Dark Sky API allows you to look up the weather anywhere on the globe. 
+            <a target="_blank" href="https://darksky.net/dev/docs">
+                <i class="fa fa-external-link-square-alt"></i>
+            </a>
+        </small>
+        <ul class="small text-black-50">
+            <li>
+                DarkSky endpoint (ex. https://api.darksky.net/forecast/)
+            </li>
+            <li>
+                DarkSky Api Key
+            </li>
+        </ul>
+    </li>
+    <li>
+        Aplha Vantage -
+        <small class="text-black-50">
+            This suite of APIs provide realtime and historical global equity data in 4 different temporal resolutions: (1) daily, (2) weekly, (3) monthly, and (4) intraday. Daily, weekly, and monthly time series contain 20+ years of historical data. 
+            <a target="_blank" href="https://www.alphavantage.co/documentation/">
+                <i class="fa fa-external-link-square-alt"></i>
+            </a>
+        </small>
+        <ul class="small text-black-50">
+            <li>
+                Aplha Advantage endpoint (ex. https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY)
+            </li>
+            <li>
+                Aplha Advantage Api Key
+            </li>
+        </ul>
+    </li>
+    <li>
+        Bootswatch -
+        <small class="text-black-50">
+            You can use the API to integrate the themes with your platform. 
+            <a target="_blank" href="https://bootswatch.com/help/#api">
+                <i class="fa fa-external-link-square-alt"></i>
+            </a>
+        </small>
+        <ul class="small text-black-50">
+            <li>
+                Bootswatch endpoint (ex. https://bootswatch.com/api/4.json)
+            </li>
+        </ul>
+    </li>
+    <li>
+        Amazon Web Services <small class="text-black-50">(optional)</small>-
+        <small class="text-black-50">
+            Amazon Web Services offers reliable, scalable, and inexpensive cloud computing services. Free to join, pay only for what you use. 
+            <a target="_blank" href="https://aws.amazon.com/">
+                <i class="fa fa-external-link-square-alt"></i>
+            </a>
+        </small>
+        <ul class="small text-black-50">
+            <li>
+                AWS public endpoint
+            </li>
+            <li>
+                S3 Bucket
+            </li>
+        </ul>
+    </li>
+</ul>
+<span>You should place these keys in the templated <strong>appsettings.json</strong> file.</span>
+<code>
+    <br />
+    "Configurations": {<br />
+    "AWSCDN": "",<br />
+    "S3BucketName": "",<br />
+    "ThemesEndpoint": "https://bootswatch.com/api/4.json",<br />
+    "LanguageUnderstandingEndpoint": "https://westus.api.cognitive.microsoft.com/luis/v2.0/apps/",<br />
+    "LanguageUnderstandingAppKey": "YOUR KEY HERE",<br />
+    "LanguageUnderstandingApiKey": "YOUR KEY HERE",<br />
+    "GoogleAddressLookupEndpoint": "https://maps.googleapis.com/maps/api/geocode/json?address=",<br />
+    "GoogleApiKey": "YOUR KEY HERE",<br />
+    "DarkSkyEndpoint": "https://api.darksky.net/forecast/",<br />
+    "DarkSkySecretKey": "YOUR KEY HERE",<br />
+    "AplhaAdvantageApiKey": "YOUR KEY HERE",<br />
+    "AplhaAdvantageApiEndPoint": "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY"<br />
+    }
+</code>

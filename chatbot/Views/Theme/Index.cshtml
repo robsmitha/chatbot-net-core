@@ -1,0 +1,96 @@
+﻿@using Microsoft.AspNetCore.Http;
+@model chatbot.Models.ThemeViewModel
+<h2>Themes</h2>
+<h3>@ViewData["Message"]</h3>
+@{
+    var themeCdn = Context.Session.GetString("themeCdn") ?? string.Empty;
+}
+<div class="card shadow">
+    @if (Model.themes != null && Model.themes.Count() > 0)
+    {
+    <table class="table table-hover table-striped table-sm border">
+        <caption class="pl-2">
+            @Model.themes.Count() themes
+        </caption>
+        <thead>
+            <tr>
+                <th scope="col">Theme</th>
+                <th scope="col">Name</th>
+                <th scope="col">Description</th>
+                <th scope="col" class="text-center">Apply</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.themes)
+            {
+                <tr>
+                    <td width="10%">
+                        <img src="@item.thumbnail" class="img-thumbnail" onclick="ShowThemePreview(this)" data-preview="@item.preview" data-name="@item.name" />
+                    </td>
+                    <td>@item.name</td>
+                    <td>@item.description</td>
+                    <td class="text-center">
+                        @if (themeCdn == item.cssCdn)
+                        {
+                            <small class="text-black-50">
+                                Applied
+                            </small>
+                        }
+                        else
+                        {
+                            <form method="post" action="@Url.Action("Apply","Theme")">
+                                @Html.AntiForgeryToken()
+                                @Html.Hidden("themeCdn", item.cssCdn)
+                                <button type="submit" class="btn btn-outline-primary btn-sm btn-block">
+                                    Apply
+                                </button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    }
+    else
+    {
+    <div class="p-3 text-center">
+        No themes to display!
+    </div>
+    }
+</div>
+<style>
+    .modal-full {
+        min-width: 100%;
+        margin: 0;
+    }
+</style>
+<div id="modal_preview" class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-full">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modal_title_preview"></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <iframe style="height: 85vh" id="iframe_preview"></iframe>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script>
+        function ShowThemePreview(control) {
+            $('#modal_title_preview').html("Preview: " + $(control).attr('data-name'));
+            $('#iframe_preview').attr('src', $(control).attr('data-preview'));
+            $('#modal_preview').modal('show');
+        }
+        $('#modal_preview').on('hide.bs.modal', function (e) {
+            $('#iframe_preview').attr('src', '');
+            $('#modal_title_preview').html('');
+        })
+    </script>
+}

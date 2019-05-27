@@ -1,0 +1,99 @@
+﻿@using Microsoft.AspNetCore.Http;
+@{
+    ViewData["Title"] = "Home Page";
+    var jqueryUiCss = !string.IsNullOrWhiteSpace(ViewBag.CDN) ? $"{ViewBag.CDN}/Content/jquery/jquery-ui/jquery-ui.min.css" : "//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css";
+    var jqueryUiJs = !string.IsNullOrWhiteSpace(ViewBag.CDN) ? $"{ViewBag.CDN}/Content/jquery/jquery-ui/jquery-ui.min.js" : "https://code.jquery.com/ui/1.12.1/jquery-ui.js";
+}
+<link rel="stylesheet" href="@jqueryUiCss">
+
+<h2>
+    Hello, Non-Sequitur.
+</h2>
+<div class="form-row mb-1">
+    <div class="col">
+        <label class="d-none" for="utterance">Type something below</label>
+        <input type="text" class="form-control form-control-lg" id="utterance" placeholder="Ask something..." onkeydown="HandleKey(event)" required>
+    </div>
+    <div class="col-auto">
+        <button id="ask" class="btn btn-outline-primary btn-lg" onclick="Speak()">
+            Ask<span class="d-none d-sm-inline"> Away!</span>
+        </button>
+    </div>
+</div>
+<small class="text-black-50 d-none d-sm-block mt-sm-1 mb-sm-2">
+    *The Chatbot is powered by a
+    <a target="_blank" href="https://www.luis.ai/home">language understanding api</a>
+    to handle questions about weather, stocks and greetings.
+</small>
+<div class="row">
+    <div class="col">
+        <div id="div_chat_list"></div>
+        <div class="p-1">
+            <small class="text-black-50">
+                Last updated at <span id="timestamp"></span>
+            </small>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script src="@jqueryUiJs"></script>
+    <script>
+    function HandleKey(e) {
+        if (e.keyCode && e.keyCode === 13) {
+            Speak()
+        }
+    }
+    function Speak() {
+        var query = $('#utterance').val()
+        if (query) {
+            Loading(true)
+            $.get('@Url.Action("Speak","Home")', { query: query }, function (data) {
+                $('#utterance').val('')
+                Loading(false)
+                List()
+            })
+        }
+    }
+    function List() {
+        $.get('@Url.Action("List","Home")', function (data) {
+            $('#div_chat_list').html(data)
+            var d = new Date();
+            $('#timestamp').html(formatTime(d))
+        })
+    }
+    function Loading(loading) {
+        $('#ask').prop('disabled', loading)
+        $('#utterance').prop('disabled', loading)
+        if (loading) {
+            $('#ask').html('<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span><span class="sr-only">Loading...</span><span class="d-none d-sm-inline"> Thinking</span>')
+        } else {
+            $('#ask').html('Ask<span class="d-none d-sm-inline"> Away!</span>')
+        }
+    }
+    function formatTime(date) {
+      var hours = date.getHours();
+      var minutes = date.getMinutes();
+      var ampm = hours >= 12 ? 'pm' : 'am';
+      hours = hours % 12;
+      hours = hours ? hours : 12; // the hour '0' should be '12'
+      minutes = minutes < 10 ? '0'+minutes : minutes;
+      var strTime = hours + ':' + minutes + ' ' + ampm;
+      return strTime;
+    }
+    $(function () {
+        $("#utterance").autocomplete({
+            source: function (request, response) {
+                let value = $(this.element).val()
+                $.get('@Url.Action("Source","Home")', { value: value }, function (data) {
+                    response(data)
+                })
+            },
+            select: function (event, ui) {
+                $('#utterance').val(ui.item.value)
+                Speak()
+		    }
+        });
+        List()
+    })
+    </script>
+}

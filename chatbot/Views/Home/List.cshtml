@@ -1,0 +1,99 @@
+﻿@model chatbot.Models.ChatViewModel
+@{
+    var cdn = "https://s3.us-east-2.amazonaws.com/smitha-cdn";
+    var iconSize = 95;
+}
+
+<style>
+    .chat-window {
+        overflow-y: scroll;
+        height: 525px;
+    }
+</style>
+<div id="chat_window" class="px-2 pt-0 bg-white rounded shadow chat-window border">
+    @if (Model?.Items != null && Model.Items.Count > 0)
+    {
+        foreach (var item in Model.Items)
+        {
+            <div class="media border-bottom py-1">
+                <div class="media-body small">
+                    <div class="row no-gutters">
+                        <div class="col-auto">
+                            <span class="fa-stack fa-2x">
+                                <i class="fas fa-square fa-stack-2x"></i>
+                                <i class="fas fa-user fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </div>
+                        <div class="col">
+                            <small class="text-gray-dark">
+                                @item.timeStamp.ToShortTimeString()
+                            </small>
+                            <br />
+                            @item.query
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="media border-bottom py-1">
+                <div class="media-body small">
+                    <div class="row no-gutters">
+                        <div class="col-auto">
+                            <span class="fa-stack fa-2x text-primary">
+                                <i class="fas fa-square fa-stack-2x"></i>
+                                <i class="fas fa-robot fa-stack-1x fa-inverse"></i>
+                            </span>
+                        </div>
+                        <div class="col">
+                            <small class="text-gray-dark">
+                                @item.timeStamp.ToShortTimeString()
+                            </small>
+                            <br />
+                            @item.reply.message
+
+                            @switch (item.topScoringIntent.intent)
+                            {
+                                case chatbot.Models.LanguageUnderstandingModel.INTENT_CHECK_STOCK:
+                                    break;
+                                case chatbot.Models.LanguageUnderstandingModel.INTENT_CHECK_WEATHER:
+                                    break;
+                                case chatbot.Models.LanguageUnderstandingModel.INTENT_GREETING:
+                                    break;
+                                case chatbot.Models.LanguageUnderstandingModel.INTENT_NONE:
+                                    break;
+                                default:
+                                    break;
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="media border-bottom py-1">
+            <div class="media-body small">
+                <div class="row no-gutters">
+                    <div class="col-auto">
+                        <span class="fa-stack fa-2x">
+                            <i class="fas fa-square fa-stack-2x"></i>
+                            <i class="fas fa-robot fa-stack-1x fa-inverse"></i>
+                        </span>
+                    </div>
+                    <div class="col">
+                        <small class="text-gray-dark">
+                            @DateTime.Now.ToShortTimeString()
+                        </small>
+                        <br />
+                        Welcome, Non-Sequitur. Please ask me about the weather or stocks.
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<script>
+    $(function () {
+        $( '#chat_window' ).scrollTop( document.getElementById("chat_window").scrollHeight )
+    })
+</script>

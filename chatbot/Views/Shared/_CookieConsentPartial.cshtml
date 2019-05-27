@@ -1,0 +1,36 @@
+﻿@using Microsoft.AspNetCore.Http.Features
+
+@{
+    var consentFeature = Context.Features.Get<ITrackingConsentFeature>();
+    var showBanner = !consentFeature?.CanTrack ?? false;
+    var cookieString = consentFeature?.CreateConsentCookie();
+}
+
+@if (showBanner)
+{
+    <div id="cookieConsent" class="bg-dark p-2"  role="alert">
+       <div class="container">
+           <div class="form-row">
+               <div class="col-sm col-12">
+                   <p class="text-white">
+                       Use this space to summarize your privacy and cookie use policy.
+                   </p>
+               </div>
+               <div class="col-sm-auto-auto">
+                   <a asp-controller="Home" asp-action="Privacy" class="btn btn-info btn-sm">Learn More</a>
+               </div>
+               <div class="col-sm-auto col-auto">
+                   <button type="button" class="btn btn-secondary btn-sm" data-cookie-string="@cookieString">Accept</button>
+               </div>
+           </div>
+       </div>
+    </div>
+    <script>
+        (function () {
+            document.querySelector("#cookieConsent button[data-cookie-string]").addEventListener("click", function (el) {
+                document.cookie = el.target.dataset.cookieString;
+                document.querySelector("#cookieConsent").classList.add("d-none");
+            }, false);
+        })();
+    </script>
+}
